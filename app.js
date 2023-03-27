@@ -2,7 +2,8 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const User = require('./models/user')
+const User = require('./models/user');
+const session = require('express-session')
 
 //create app
 const app = express();
@@ -26,6 +27,22 @@ mongoose.connect('mongodb://0.0.0.0:27017/demos',
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
 app.use(morgan('tiny'));
+app.use(session({
+    secret: 'some-42-r@nd0m-s3cr3t',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {maxAge: 60 * 60 * 1000}
+}))
+
+app.use((req, res, next) =>
+{
+    if (!req.session.counter)
+        req.session.counter = 1;
+    else
+        req.session.counter++;
+    console.log(req.session);
+    next();
+})
 
 // set up routes
 app.get('/', (req, res)=>{

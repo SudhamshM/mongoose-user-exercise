@@ -47,6 +47,49 @@ app.post('/', (req, res, next) =>
     .catch(err => next(err));
 });
 
+// get the login form
+app.get('/login', (req, res) =>
+{
+    res.render('login')
+})
+
+// process login request
+app.post('/login', (req, res, next) => 
+{
+    // authenticate user login request
+    let email = req.body.email;
+    let password = req.body.password;
+
+    // get the user that matches the email
+    User.findOne({email: email})
+    .then((user) =>
+    {
+        if (user)
+        {
+            // user found in db
+            user.comparePwd(password)
+            .then((result) => 
+            {
+                if (result)
+                {
+                    res.redirect('/profile')
+                }
+                else
+                {
+                    console.log('wrong password');
+                    res.redirect('/login')
+                }
+            })
+        }
+        else
+        {
+            console.log("wrong email address")
+            res.redirect('/login')
+        }
+    })
+    .catch(err => next(err))
+})
+
 app.use((req, res, next) => {
     let err = new Error('The server cannot locate ' + req.url);
     err.status = 404;

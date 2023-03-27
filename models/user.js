@@ -33,4 +33,10 @@ userSchema.pre('save', function(next)
     }
 })
 
+// implement a method to compare hash stored in db
+userSchema.methods.comparePwd = function(loginPassword) 
+{
+    return bcrypt.compare(loginPassword, this.password);
+}
+
 module.exports = mongoose.model('User', userSchema);

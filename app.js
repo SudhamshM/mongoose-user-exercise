@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const User = require('./models/user')
 
 //create app
 const app = express();
@@ -30,6 +31,11 @@ app.use(morgan('tiny'));
 app.get('/', (req, res)=>{
     res.render('index');
 });
+
+app.get('/new', (req, res) => 
+{
+    res.render('new')
+})
 
 
 app.use((req, res, next) => {

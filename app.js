@@ -3,7 +3,8 @@ const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const User = require('./models/user');
-const session = require('express-session')
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 //create app
 const app = express();
@@ -31,7 +32,8 @@ app.use(session({
     secret: 'some-42-r@nd0m-s3cr3t',
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 60 * 60 * 1000}
+    cookie: {maxAge: 60 * 60 * 1000},
+    store: new MongoStore({mongoUrl: 'mongodb://0.0.0.0:27017/demos'})
 }))
 
 app.use((req, res, next) =>

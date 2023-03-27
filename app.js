@@ -90,6 +90,11 @@ app.post('/login', (req, res, next) =>
     .catch(err => next(err))
 })
 
+app.get('/profile', (req, res, next) =>
+{
+    res.render('profile')
+})
+
 app.use((req, res, next) => {
     let err = new Error('The server cannot locate ' + req.url);
     err.status = 404;

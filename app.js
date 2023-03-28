@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const User = require('./models/user');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
+const flash = require('connect-flash');
 
 //create app
 const app = express();
@@ -36,9 +37,14 @@ app.use(session({
     store: new MongoStore({mongoUrl: 'mongodb://0.0.0.0:27017/demos'})
 }))
 
+// set up flash msgs after session setup
+app.use(flash());
+
 app.use((req, res, next) =>
 {
     console.log(req.session);
+    res.locals.successMsg = req.flash('success');
+    res.locals.errorMsg = req.flash('error');
     next();
 })
 
@@ -88,10 +94,12 @@ app.post('/login', (req, res, next) =>
                 if (result)
                 {
                     req.session.user = user._id; // store user id in db
+                    req.flash('success', 'You have successfully logged in.');
                     res.redirect('/profile')
                 }
                 else
                 {
+                    req.flash('error', 'Wrong password.');
                     console.log('wrong password');
                     res.redirect('/login')
                 }
@@ -99,6 +107,7 @@ app.post('/login', (req, res, next) =>
         }
         else
         {
+            req.flash('error', 'Wrong email address.');
             console.log("wrong email address")
             res.redirect('/login')
         }
@@ -110,6 +119,7 @@ app.post('/login', (req, res, next) =>
 app.get('/profile', (req, res, next) =>
 {
     let id = req.session.user;
+    console.log(req.flash());
     User.findById(id)
     .then((user) => res.render('profile', {user}))
     .catch(err => next(err));

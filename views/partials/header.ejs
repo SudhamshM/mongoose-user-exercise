@@ -16,3 +16,15 @@
         <a href='/profile'>Profile</a>
         <a href='/logout'>Logout</a>
     </nav>
+
+    <% if (errorMsg.length > 0) { %>
+       <% errorMsg.forEach(message => { %>
+            <div><%= message %></div>
+       <% }); %>
+   <% } %>
+
+   <% if (successMsg.length > 0) { %>
+    <% successMsg.forEach(message => { %>
+         <div><%= message %></div>
+    <% }); %>
+<% } %>

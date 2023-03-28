@@ -91,6 +91,7 @@ app.post('/login', (req, res, next) =>
             {
                 if (result)
                 {
+                    req.session.user = user._id; // store user id in db
                     res.redirect('/profile')
                 }
                 else
@@ -111,7 +112,10 @@ app.post('/login', (req, res, next) =>
 
 app.get('/profile', (req, res, next) =>
 {
-    res.render('profile')
+    let id = req.session.user;
+    User.findById(id)
+    .then((user) => res.render('profile', {user}))
+    .catch(err => next(err));
 })
 
 app.use((req, res, next) => {

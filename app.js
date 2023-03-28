@@ -65,7 +65,21 @@ app.post('/', (req, res, next) =>
     let user = new User(req.body);
     user.save()
     .then(() => res.redirect('/login'))
-    .catch(err => next(err));
+    .catch(err => 
+        {
+            if (err.name === 'ValidationError')
+            {
+                req.flash('error', err.message);
+                return res.redirect('/new')
+            }
+
+            if (err.code === 11000)
+            {
+                req.flash('error', "Email already in use.")
+                return res.redirect('/new')
+            }
+            next(err);
+        });
 });
 
 // get the login form

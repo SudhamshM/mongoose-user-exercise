@@ -6,6 +6,7 @@
     <title>
         Log In
     </title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -19,12 +20,12 @@
 
     <% if (errorMsg.length > 0) { %>
        <% errorMsg.forEach(message => { %>
-            <div><%= message %></div>
+            <div class="error"><%= message %></div>
        <% }); %>
    <% } %>
 
    <% if (successMsg.length > 0) { %>
     <% successMsg.forEach(message => { %>
-         <div><%= message %></div>
+         <div class="success"><%= message %></div>
     <% }); %>
 <% } %>

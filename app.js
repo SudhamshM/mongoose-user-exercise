@@ -38,10 +38,6 @@ app.use(session({
 
 app.use((req, res, next) =>
 {
-    if (!req.session.counter)
-        req.session.counter = 1;
-    else
-        req.session.counter++;
     console.log(req.session);
     next();
 })
@@ -110,12 +106,25 @@ app.post('/login', (req, res, next) =>
     .catch(err => next(err))
 })
 
+// get user profile
 app.get('/profile', (req, res, next) =>
 {
     let id = req.session.user;
     User.findById(id)
     .then((user) => res.render('profile', {user}))
     .catch(err => next(err));
+})
+
+// logout user
+app.get('/logout', (req, res, next) =>
+{
+    req.session.destroy(err =>
+        {
+            if (err)
+                return next(err)
+            else
+                res.redirect('/')
+        })
 })
 
 app.use((req, res, next) => {
